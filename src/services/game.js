@@ -29,20 +29,20 @@ class GameService {
 
       if (data) {
         user.log.log(
-          `Bắt đầu chơi game, kết thúc và nhận thưởng sau: ${colors.blue(
+          `Start playing game, finish, and receive rewards after: ${colors.blue(
             delay + "s"
           )}`
         );
         return data.gameId;
       } else {
-        throw new Error(`Chơi game thất bại: ${data.message}`);
+        throw new Error(`Game play failed: ${data.message}`);
       }
     } catch (error) {
       if (error.response?.data?.message === "not enough play passes") {
         return 2;
       } else {
         user.log.logError(
-          `Chơi game thất bại: ${error.response?.data?.message}`
+          `Game play failed: ${error.response?.data?.message}`
         );
       }
       return null;
@@ -65,17 +65,17 @@ class GameService {
       const { data } = await user.http.post(5, "game/claim", body);
       if (data) {
         user.log.log(
-          `Chơi game xong, phần thưởng: ${colors.green(
+          `Game completed, reward: ${colors.green(
             points + user.currency
           )}${eligibleDogs ? ` - ${dogs} 🦴` : ""}`
         );
         return true;
       } else {
-        throw new Error(`Nhận thưởng chơi game thất bại: ${data.message}`);
+        throw new Error(`Failed to claim game rewards: ${data.message}`);
       }
     } catch (error) {
       user.log.logError(
-        `Nhận thưởng chơi game thất bại: ${error.response?.data?.message}`
+        `Failed to claim game rewards: ${error.response?.data?.message}`
       );
       return false;
     }
@@ -92,7 +92,7 @@ class GameService {
         const index = generatorHelper.randomInt(0, servers.length - 1);
         server = `https://${servers[index].id}.vercel.app/api/`;
       } else {
-        console.log(colors.yellow(`Không còn máy chủ miễn phí nào hoạt động!`));
+        console.log(colors.yellow(`No free servers are available!`));
         return null;
       }
     } else {
@@ -118,7 +118,7 @@ class GameService {
           server = servers[0].url;
         } else {
           console.log(
-            colors.yellow(`Không còn máy chủ miễn phí nào hoạt động!!`)
+            colors.yellow(`No free servers are available!!`)
           );
           return null;
         }
@@ -154,7 +154,7 @@ class GameService {
       if (payload) {
         return payload;
       }
-      throw new Error(`Tạo payload thất bại: ${data?.error}`);
+      throw new Error(`Failed to create payload: ${data?.error}`);
     } catch (error) {
       console.log(colors.red(error?.response?.data?.message));
       return null;
@@ -171,13 +171,13 @@ class GameService {
   }
 
   checkTimePlayGame(time) {
-    // Lấy giờ hiện tại theo múi giờ Việt Nam (UTC+7)
+    // Get the current hour according to Vietnam time zone (UTC+7)
     const nowHour = dayjs().hour();
     return !time.includes(nowHour);
   }
 
   getMinutesUntilNextStart(times) {
-    // Lấy giờ hiện tại theo múi giờ Việt Nam (UTC+7)
+    // Get the current hour according to Vietnam time zone (UTC+7)
     const currentHour = dayjs().hour();
     times.sort((a, b) => a - b);
 
@@ -194,7 +194,7 @@ class GameService {
       .set("minute", 0)
       .set("second", 0);
 
-    // Tính số phút từ giờ hiện tại đến lần bắt đầu tiếp theo
+    // Calculate the minutes from the current time to the next start time
     return nextStartTime.diff(now, "minute");
   }
 
@@ -205,9 +205,9 @@ class GameService {
       if (profile) playPasses = profile?.playPasses;
       const eligibleDogs = await this.eligibilityDogs(user);
       const textDropDogs =
-        (eligibleDogs ? "có thể" : "không thể") + " nhặt DOGS 🦴";
+        (eligibleDogs ? "can" : "cannot") + " pick up DOGS 🦴";
       user.log.log(
-        `Còn ${colors.blue(playPasses + " lượt")} chơi game ${colors.magenta(
+        `Remaining ${colors.blue(playPasses + " turns")} to play the game ${colors.magenta(
           `[${textDropDogs}]`
         )}`
       );
@@ -219,14 +219,14 @@ class GameService {
           continue;
         }
         if (!this.API_KEY) {
-          user.log.log(colors.yellow(`Không có API KEY, bỏ qua chơi game`));
+          user.log.log(colors.yellow(`No API KEY, skipping game play`));
           gameCount = 0;
           continue;
         }
         if (this.REMAINING_QUOTA <= 0) {
           user.log.log(
             colors.yellow(
-              `Đã dùng hết lượt chơi game của API KEY. Liên hệ Telegram @zuydd để mua thêm`
+              `API KEY play limit reached. Contact Telegram @zuydd to purchase more`
             )
           );
           gameCount = 0;
@@ -250,14 +250,14 @@ class GameService {
         }
       }
       if (playPasses > 0)
-        user.log.log(colors.magenta("Đã dùng hết lượt chơi game"));
+        user.log.log(colors.magenta("All game turns have been used"));
       return -1;
     } else {
       const minutesUntilNextStart = this.getMinutesUntilNextStart(timePlayGame);
       user.log.log(
         colors.yellow(
-          `Đã cài đặt không thể chơi game trong khoảng thời gian này, lần chơi tiếp theo sau: ${colors.blue(
-            minutesUntilNextStart + " phút"
+          `Configured not to play the game during this time, the next game will start in: ${colors.blue(
+            minutesUntilNextStart + " minutes"
           )}`
         )
       );

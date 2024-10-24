@@ -20,23 +20,23 @@ class DailyService {
   async checkin(user) {
     const dataCheckin = await this.getDataCheckin(user);
     if (dataCheckin === 1) {
-      user.log.log(colors.magenta("Đã checkin hôm nay"));
+      user.log.log(colors.magenta("Already checked in today"));
     } else if (dataCheckin?.reward) {
       try {
         const { data } = await user.http.post(0, "daily-reward?offset=-420");
         if (data) {
           user.log.log(
-            `Checkin thành công, phần thưởng: ${colors.green(
-              dataCheckin.reward.passes + " lượt"
-            )} chơi game - ${colors.green(
+            `Check-in successful, reward: ${colors.green(
+              dataCheckin.reward.passes + " game turns"
+            )} - ${colors.green(
               dataCheckin.reward.points + user.currency
             )}`
           );
         } else {
-          throw new Error(`Checkin thất bại: ${data.message}`);
+          throw new Error(`Check-in failed: ${data.message}`);
         }
       } catch (error) {
-        user.log.logError(`Checkin thất bại: ${error.response?.data?.message}`);
+        user.log.logError(`Check-in failed: ${error.response?.data?.message}`);
         return null;
       }
     }

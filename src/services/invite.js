@@ -10,12 +10,12 @@ class InviteClass {
         return data;
       } else {
         throw new Error(
-          `Lấy thông tin invite balance thất bại: ${data.message}`
+          `Failed to retrieve invite balance: ${data.message}`
         );
       }
     } catch (error) {
       user.log.logError(
-        `Lấy thông tin invite balance thất bại: ${error.response?.data?.message}`
+        `Failed to retrieve invite balance: ${error.response?.data?.message}`
       );
       return 0;
     }
@@ -26,17 +26,17 @@ class InviteClass {
       const { data } = await user.http.post(3, "friends/claim", {});
       if (data) {
         user.log.log(
-          `Claim điểm giới thiệu thành công, nhận được: ${colors.green(
+          `Successfully claimed invite points, received: ${colors.green(
             data?.claimBalance + user.currency
           )}`
         );
         return true;
       } else {
-        throw new Error(`Claim điểm giới thiệu thất bại: ${data.message}`);
+        throw new Error(`Failed to claim invite points: ${data.message}`);
       }
     } catch (error) {
       user.log.logError(
-        `Claim điểm giới thiệu thất bại: ${error.response?.data?.message}`
+        `Failed to claim invite points: ${error.response?.data?.message}`
       );
       return false;
     }

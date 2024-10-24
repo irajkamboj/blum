@@ -9,7 +9,7 @@ class KeyService {
   constructor() {}
 
   maskApiKey(apiKey) {
-    // Tách chuỗi thành 3 phần: phần đầu, phần giữa cần ẩn, và phần cuối
+    // Split the string into 3 parts: the beginning, the middle to mask, and the end
     const parts = apiKey.split("_");
     if (parts.length !== 2) {
       throw new Error("Invalid API key format");
@@ -18,14 +18,14 @@ class KeyService {
     const prefix = parts[0]; // 'pro'
     const key = parts[1]; // 'a8ff5ce14b57853563c44988a890dca2'
 
-    // Lấy phần đầu của key (6 ký tự) và phần cuối của key (4 ký tự)
+    // Take the first 6 characters and the last 4 characters of the key
     const start = key.slice(0, 6);
     const end = key.slice(-6);
 
-    // Phần giữa sẽ được thay thế bằng các ký tự '*'
+    // The middle part will be replaced with '*' characters
     const maskedMiddle = "*".repeat(key.length - start.length - end.length);
 
-    // Kết hợp lại chuỗi đã được ẩn
+    // Combine the masked string back
     return `${prefix}_${start}${maskedMiddle}${end}`;
   }
 
@@ -41,12 +41,6 @@ class KeyService {
       });
       return data;
     } catch (error) {
-      // console.log(
-      //   colors.red(
-      //     `[${error?.response?.data?.code}] ` +
-      //       error?.response?.data?.message
-      //   )
-      // );
       return null;
     }
   }
@@ -67,7 +61,7 @@ class KeyService {
       if (check === null) {
         console.log(
           colors.red(
-            `API KEY không hợp lệ, liên hệ Telegram @zuydd để nhận/mua API KEY`
+            `Invalid API KEY, contact Telegram @zuydd to get/purchase an API KEY`
           )
         );
       } else {
@@ -75,9 +69,9 @@ class KeyService {
         gameService.setQuota(check?.data);
         const maskedKey = this.maskApiKey(apiKey);
         console.log(
-          `API KEY: ${colors.green(maskedKey)} - Còn ${colors.green(
+          `API KEY: ${colors.green(maskedKey)} - Remaining ${colors.green(
             check?.data
-          )} lượt sử dụng`
+          )} uses`
         );
       }
     } else {
@@ -86,7 +80,7 @@ class KeyService {
           type: "input",
           name: "apiKey",
           message:
-            "Nhập API KEY chơi game của bạn? Để trống nếu bạn không có (sẽ bỏ qua chơi game trong quá trình chạy tool)",
+            "Enter your game API KEY? Leave empty if you don't have one (game play will be skipped during the tool's operation)",
         },
       ]);
       const { apiKey } = response;
@@ -95,7 +89,7 @@ class KeyService {
         if (check === null) {
           console.log(
             colors.red(
-              `API KEY không hợp lệ, liên hệ Telegram @zuydd để nhận/mua API KEY`
+              `Invalid API KEY, contact Telegram @zuydd to get/purchase an API KEY`
             )
           );
         } else {
@@ -104,9 +98,9 @@ class KeyService {
           gameService.setQuota(check?.data);
           const maskedKey = this.maskApiKey(apiKey);
           console.log(
-            `API KEY: ${colors.green(maskedKey)} - Còn ${colors.green(
+            `API KEY: ${colors.green(maskedKey)} - Remaining ${colors.green(
               check?.data
-            )} lượt sử dụng`
+            )} uses`
           );
         }
       }

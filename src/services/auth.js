@@ -28,7 +28,7 @@ class AuthService {
     } catch (error) {
       if (!skipLog) {
         user.log.logError(
-          `Đăng nhập thất bại: ${error.response?.data?.message}`
+          `Login failed: ${error.response?.data?.message}`
         );
       }
       return null;
@@ -53,7 +53,7 @@ class AuthService {
     } catch (error) {
       if (!skipLog) {
         user.log.logError(
-          `Refresh token thất bại: ${error.response?.data?.message}`
+          `Refresh token failed: ${error.response?.data?.message}`
         );
       }
       return null;
@@ -62,7 +62,7 @@ class AuthService {
 
   async handleLogin(user) {
     console.log(
-      `============== Chạy tài khoản ${user.index} | ${user.info.fullName.green} ==============`
+      `============== Running account ${user.index} | ${user.info.fullName.green} ==============`
     );
 
     let info = null;
@@ -80,18 +80,6 @@ class AuthService {
       };
     }
 
-    // if (token && tokenHelper.isExpired(token.access)) {
-    //   info = await this.refresh(user, token.refresh);
-    //   if (info) {
-    //     const profile = await this.handleAfterLogin(user, info);
-
-    //     return {
-    //       status: 1,
-    //       profile,
-    //     };
-    //   }
-    // }
-
     let infoLogin = await this.login(user);
 
     if (infoLogin) {
@@ -102,7 +90,7 @@ class AuthService {
       };
     }
     user.log.logError(
-      "Quá trình đăng nhập thất bại, vui lòng kiểm tra lại thông tin tài khoản (có thể cần phải lấy mới query_id). Hệ thống sẽ thử đăng nhập lại sau 60s"
+      "Login process failed, please check account info (you may need to renew query_id). System will retry login after 60 seconds"
     );
     return {
       status: 0,
@@ -119,7 +107,7 @@ class AuthService {
       return null;
     } catch (error) {
       user.log.logError(
-        `Lấy thông tin tài khoản thất bại: ${error.response?.data?.message}`
+        `Failed to retrieve account info: ${error.response?.data?.message}`
       );
       return null;
     }
@@ -147,9 +135,6 @@ class AuthService {
       await this.handleAfterReconnect(user, infoLogin);
       return 1;
     }
-    // user.log.logError(
-    //   "Quá trình kết nối lại thất bại, vui lòng kiểm tra lại thông tin tài khoản (có thể cần phải lấy mới query_id)"
-    // );
     return 0;
   }
 
@@ -162,8 +147,8 @@ class AuthService {
     const profile = await this.getProfile(user);
     if (profile) {
       user.log.log(
-        colors.green("Đăng nhập thành công: ") +
-          `Số điểm: ${
+        colors.green("Login successful: ") +
+          `Points: ${
             colors.green(Math.round(profile?.availableBalance)) + user.currency
           }`
       );
@@ -183,10 +168,6 @@ class AuthService {
     user.http.updateToken(accessToken);
     user.http.updateRefreshToken(refreshToken);
     fileHelper.saveToken(user.info.id, info);
-    // const profile = await this.getProfile(user);
-    // if (profile) {
-    //   user.log.logSuccess("Kết nối lại thành công");
-    // }
   }
 }
 
