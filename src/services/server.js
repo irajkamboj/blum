@@ -19,7 +19,7 @@ class Server {
   async showNoti() {
     // Display static notification instead of fetching from server
     console.log(colors.blue("📢 Notification from the system"));
-    console.log("None.");
+    console.log("Author of this script put a paywall, you need to buy an API key to Auto Play games using this script.");
     console.log("");
   }
 
