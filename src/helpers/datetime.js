@@ -14,11 +14,11 @@ class DatetimeHelper {
     let result = "";
 
     if (hours > 0) {
-      result += `${hours} giờ `;
+      result += `${hours} hours `;
     }
 
     if (minutes > 0 || hours > 0) {
-      result += `${minutes} phút `;
+      result += `${minutes} minutes `;
     }
 
     result += `${secs}s`;
