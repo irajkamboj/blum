@@ -146,19 +146,9 @@ console.log(
 console.log(
   "Any actions involving selling this tool in any form are not allowed!"
 );
-console.log(
-  `Telegram: ${colors.green(
-    "https://t.me/zuydd"
-  )}  ___  Facebook: ${colors.blue("https://www.facebook.com/zuy.dd")}`
-);
-console.log(
-  `🚀 Get the latest tools at: 👉 ${colors.gray(
-    "https://github.com/zuydd"
-  )} 👈`
-);
 console.log("");
 console.log(
-  `Purchase or get a free API KEY at: 👉 ${colors.blue(
+  `Purchase API KEY at: 👉 ${colors.blue(
     "https://zuy-web.vercel.app/blum"
   )}`
 );
